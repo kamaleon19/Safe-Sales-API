@@ -34,4 +34,5 @@ export class Product {
         type: 'text'
     })
     trademark: string
+    
 }

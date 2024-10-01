@@ -68,12 +68,19 @@ export class ProductsService {
     return product;
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  async update(id: string, updateProductDto: UpdateProductDto) {
+
+    const product = await this.productRepository.preload({ id, ...updateProductDto })
+    await this.productRepository.save(product)
+    return product
+
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  async remove(id: string) {
+
+    const product = await this.findOne( id )
+    await this.productRepository.remove(product)
+    
   }
 
   private handleDbExceptions( error: any){
