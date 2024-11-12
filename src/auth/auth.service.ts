@@ -1,11 +1,15 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { JwtService } from '@nestjs/jwt';
 
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt'
 
 import { CreateUserDto, LoginUserDto } from './dto/';
 import { User } from './entities/user.entity';
+import { CommonService } from 'src/common/common.service';
+import { JwtPayload } from './interfaces';
+
 
 
 @Injectable()
@@ -13,7 +17,11 @@ export class AuthService {
 
   constructor(
     @InjectRepository(User)
-    private readonly userRepository : Repository<User>
+    private readonly userRepository : Repository<User>,
+
+    private readonly commonService : CommonService,
+
+    private readonly jwtService : JwtService
   ){}
 
   async register(createUserDto: CreateUserDto) {
@@ -21,7 +29,7 @@ export class AuthService {
     try {
       const { password, ...userData } = createUserDto
 
-    const user = await this.userRepository.create({
+      const user = this.userRepository.create({
       ...userData,
       password: bcrypt.hashSync(password, 10),
     })
@@ -30,10 +38,13 @@ export class AuthService {
 
     delete user.password
 
-    return user
+    return {
+      ...user,
+      token: this.getJwtToken({ id: user.id })
+    }
 
     } catch (error) {
-      return error
+      return this.commonService.handleDBExceptions( error )
     }
   }
 
@@ -56,8 +67,16 @@ export class AuthService {
 
     delete user.password
 
-    return user
+    return {
+      ...user,
+      token: this.getJwtToken({ id: user.id })
+    }
     
+  }
+
+  private getJwtToken ( payload : JwtPayload ){
+    const token = this.jwtService.sign( payload )
+    return token
   }
 
 }

@@ -34,6 +34,6 @@ export class User {
         array:    true,
         default:['user']
     })
-    rol:      string[]
+    roles:      string[]
 
 }
