@@ -8,6 +8,7 @@ import { CustomersModule } from './customers/customers.module';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { SuppliersModule } from './suppliers/suppliers.module';
 
 @Module({
   imports: [
@@ -32,7 +33,10 @@ import { AppService } from './app.service';
     AuthModule,
 
 
-    CustomersModule
+    CustomersModule,
+
+
+    SuppliersModule
   ],
   controllers: [AppController],
   providers: [AppService],

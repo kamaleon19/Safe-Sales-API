@@ -17,7 +17,7 @@ export class ProductsService {
   private readonly logger = new Logger('Product Service')
 
   constructor(
-    @InjectRepository( Product)
+    @InjectRepository( Product )
     private readonly productRepository: Repository<Product>
   ){}
 
