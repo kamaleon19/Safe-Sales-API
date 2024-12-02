@@ -1,0 +1,80 @@
+import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+
+import { Repository } from 'typeorm';
+import {validate as IsUUID} from 'uuid'
+
+import { CreateExpenseDto } from './dto/create-expense.dto';
+import { UpdateExpenseDto } from './dto/update-expense.dto';
+import { Expense } from './entities/expense.entity';
+import { PaginationDto } from 'src/common/dtos/pagination.dto';
+
+@Injectable()
+export class ExpensesService {
+
+  constructor(
+    @InjectRepository(Expense)
+    private readonly expenseRepository: Repository<Expense>
+  ){}
+  async create(createExpenseDto: CreateExpenseDto) {
+
+    try {
+
+      const expense = this.expenseRepository.create(createExpenseDto)
+      await this.expenseRepository.save(expense)
+
+      if(expense.status !== 'PAGADO'){
+        delete expense.paidAt
+      }
+
+      return expense
+
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
+
+  async findAll( paginationDto: PaginationDto ) { // TO DO: Eliminar la columna paid at en caso de contener un valor nulo
+
+    const { limit = 10, offset = 0} = paginationDto
+
+    const expenses = await this.expenseRepository.find({
+      take: limit,
+      skip: offset
+    })
+    return expenses
+  }
+
+  async findOne(term: string) { // TO DO: Eliminar la columna paid at en caso de contener un valor nulo
+
+    let expense : Expense
+
+    if(IsUUID(term)){
+       expense = await this.expenseRepository.findOneBy({ id: term })
+    }else{
+      expense = await this.expenseRepository.findOneBy({ name: term })
+    }
+    if(!expense){
+      throw new BadRequestException(`Expense: ${term} not found.`)
+    }
+    return expense
+  }
+
+  async update(id: string, updateExpenseDto: UpdateExpenseDto) { // TO DO: Eliminar la columna paid at en caso de contener un valor nulo
+
+    const expense = await this.expenseRepository.preload({ id, ...updateExpenseDto })
+    await this.expenseRepository.save(expense)
+    return expense
+
+  }
+
+  async remove(id: string) {
+    const expense = await this.findOne(id)
+    await this.expenseRepository.remove(expense)
+    return {
+      status: HttpStatus.OK,
+      message: `Expense deleted.`
+    }
+  }
+
+}
