@@ -27,6 +27,12 @@ export class Expense {
   status: ExpenseStaus;
 
   @Column({
+    type: 'bigint',
+    nullable: false
+  })
+  amount: number
+
+  @Column({
     type: 'date',
     nullable: true,
   })

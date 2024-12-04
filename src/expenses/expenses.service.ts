@@ -9,6 +9,7 @@ import { UpdateExpenseDto } from './dto/update-expense.dto';
 import { Expense } from './entities/expense.entity';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 
+
 @Injectable()
 export class ExpensesService {
 
@@ -34,7 +35,7 @@ export class ExpensesService {
     }
   }
 
-  async findAll( paginationDto: PaginationDto ) { // TO DO: Eliminar la columna paid at en caso de contener un valor nulo
+  async findAll( paginationDto: PaginationDto ) { 
 
     const { limit = 10, offset = 0} = paginationDto
 
@@ -42,10 +43,17 @@ export class ExpensesService {
       take: limit,
       skip: offset
     })
+
+    expenses.map( expense => {
+      if(expense.status !== 'PAGADO'){
+        delete expense.paidAt
+      }
+    })
+
     return expenses
   }
 
-  async findOne(term: string) { // TO DO: Eliminar la columna paid at en caso de contener un valor nulo
+  async findOne(term: string) { 
 
     let expense : Expense
 
@@ -57,10 +65,14 @@ export class ExpensesService {
     if(!expense){
       throw new BadRequestException(`Expense: ${term} not found.`)
     }
+
+    if(expense.status !== 'PAGADO'){
+      delete expense.paidAt
+    }
     return expense
   }
 
-  async update(id: string, updateExpenseDto: UpdateExpenseDto) { // TO DO: Eliminar la columna paid at en caso de contener un valor nulo
+  async update(id: string, updateExpenseDto: UpdateExpenseDto) { 
 
     const expense = await this.expenseRepository.preload({ id, ...updateExpenseDto })
     await this.expenseRepository.save(expense)
