@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm"
+import { Sale } from "src/sales/entities/sale.entity"
+import { BeforeUpdate, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
 
 @Entity()
 export class Product {
@@ -34,5 +35,38 @@ export class Product {
         type: 'text'
     })
     trademark: string
+
+
+    @Column({
+        type: 'date',
+        default: new Date(),
+        nullable: false
+    })
+    createdAt : Date
+
+
+    @Column({
+        type: 'date',
+        nullable: false
+    })
+    updatedAt: Date
+
+    @Column({
+        type: 'boolean',
+        default: true
+    })
+    available: boolean
+
+    @ManyToOne(
+        () => Sale,
+        ( sale ) => sale.products
+    )
+    sale: Sale
+
+
+    @BeforeUpdate()
+    updateTimestamp(){
+        this.updatedAt = new Date()
+    }   
     
 }

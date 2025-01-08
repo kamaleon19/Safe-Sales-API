@@ -10,6 +10,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { SuppliersModule } from './suppliers/suppliers.module';
 import { ExpensesModule } from './expenses/expenses.module';
+import { SalesModule } from './sales/sales.module';
 
 @Module({
   imports: [
@@ -40,7 +41,10 @@ import { ExpensesModule } from './expenses/expenses.module';
     SuppliersModule,
 
 
-    ExpensesModule
+    ExpensesModule,
+
+
+    SalesModule
   ],
   controllers: [AppController],
   providers: [AppService],

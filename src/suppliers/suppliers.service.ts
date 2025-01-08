@@ -5,9 +5,10 @@ import { Repository } from 'typeorm';
 import { validate as IsUUID } from 'uuid';
 
 import { Supplier } from './entities/supplier.entity';
-import { CommonService } from 'src/common/common.service';
 import { CreateSupplierDto } from './dto/create-supplier.dto';
 import { UpdateSupplierDto } from './dto/update-supplier.dto';
+
+import { CommonService } from 'src/common/common.service';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 
 @Injectable()
@@ -36,6 +37,7 @@ export class SuppliersService {
     const products = await this.supplierRepository.find({
       take: limit,
       skip: offset,
+      where: { status: true },
     });
 
     return products;
@@ -45,9 +47,9 @@ export class SuppliersService {
     let supplier: Supplier;
 
     if (IsUUID(term)) {
-      supplier = await this.supplierRepository.findOneBy({ id: term });
+      supplier = await this.supplierRepository.findOneBy({ id: term, status: true });
     }else{
-     supplier = await this.supplierRepository.findOneBy({ name: term });
+     supplier = await this.supplierRepository.findOne({ where: { name: term, status: true } });
     }
 
 
@@ -68,7 +70,7 @@ export class SuppliersService {
   async remove(id: string) {
 
     const supplier = await this.findOne(id)
-    await this.supplierRepository.remove(supplier)
+    await this.supplierRepository.update(supplier.id, {status: false}) 
 
     return{
       message: `Supplier removed.`

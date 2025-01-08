@@ -21,6 +21,11 @@ export class ProductsController {
     return this.productsService.findAll( paginationDto );
   }
 
+  @Get('search')
+  searchProducts(@Query('term') term : string ){
+    return this.productsService.findBySearch(term || '')
+  }
+
   @Get(':term')
   findOne(@Param('term') term: string) {
     return this.productsService.findOne(term);
@@ -30,6 +35,7 @@ export class ProductsController {
   update(@Param('id', ParseUUIDPipe) id: string, @Body() updateProductDto: UpdateProductDto) {
     return this.productsService.update(id , updateProductDto);
   }
+  
 
   @Delete(':id')
   remove(@Param('id', ParseUUIDPipe) id: string) {

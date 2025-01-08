@@ -32,18 +32,24 @@ export class Expense {
   })
   amount: number
 
+
+  @Column({
+    type: 'date',
+    default: new Date()
+  })
+  createdAt: Date;
+
   @Column({
     type: 'date',
     nullable: true,
   })
-  paidAt?: string;
+  paidAt?: Date;
 
 
   @BeforeInsert()
   setPaymentDate() {
     if (this.status === ExpenseStaus.PAGADO) {
-      const currentDate = new Date().toISOString().split('T')[0];
-      this.paidAt = currentDate
+      this.paidAt = new Date()
     }
   }
 
@@ -51,8 +57,7 @@ export class Expense {
   @BeforeUpdate()
   updatePaymentDate() {
     if (this.status === ExpenseStaus.PAGADO) {
-      const currentDate = new Date().toISOString().split('T')[0];
-      this.paidAt = currentDate
+      this.paidAt = new Date()
     }
   }
 }

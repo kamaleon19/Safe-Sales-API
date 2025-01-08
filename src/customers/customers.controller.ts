@@ -18,6 +18,11 @@ export class CustomersController {
     return this.customersService.findAll( paginationDto );
   }
 
+  @Get('search')
+  searchProducts(@Query('term') term : string ){
+    return this.customersService.findBySearch(term || '')
+  }
+
   @Get(':term')
   findOne(@Param('term') term: string) {
     return this.customersService.findOne(term);

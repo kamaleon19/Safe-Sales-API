@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BeforeUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { CustomerFrequency } from '../enum/customer-frequency.enum';
+import { Sale } from 'src/sales/entities/sale.entity';
 
 @Entity()
 export class Customer {
@@ -32,4 +33,35 @@ export class Customer {
     default: 0
   })
   purchases: number;
+  
+  @Column({
+    type: 'boolean',
+    default: true
+  })
+  status: boolean;
+
+  @Column({
+    type: 'date',
+    default: new Date()
+  })
+  createdAt: Date;
+
+
+  @Column({
+    type: 'date',
+    default: new Date()
+  })
+  updatedAt: Date;
+
+  @OneToMany(
+    () => Sale,
+    ( sale ) => sale.customer
+  )
+  sale: Sale[]
+
+
+  @BeforeUpdate()
+  updateTimestamp() {
+    this.updatedAt = new Date();
+  } 
 }

@@ -1,13 +1,14 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { validate as IsUUID } from 'uuid'
 
 import { Customer } from './entities/customer.entity';
-import { CommonService } from 'src/common/common.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
+
+import { CommonService } from 'src/common/common.service';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 
 @Injectable()
@@ -40,9 +41,10 @@ export class CustomersService {
 
       const customers = await this.customerRepository.find({
         take: limit,
-        skip: offset
+        skip: offset,
+        where: { status: true}  
       })
-
+      
       return customers
   }
 
@@ -51,9 +53,9 @@ export class CustomersService {
     let customer : Customer
 
       if(IsUUID(term)){
-         customer = await this.customerRepository.findOneBy({ id: term})
+         customer = await this.customerRepository.findOneBy({ id: term, status: true})
       }else{
-         customer = await this.customerRepository.findOneBy({ fullname: term})
+         customer = await this.customerRepository.findOne({ where : { fullname: term, status: true}}) 
       }
       if(!customer){
         throw new BadRequestException(`Customer: ${term} not found.`)
@@ -61,18 +63,38 @@ export class CustomersService {
       return customer
   }
 
+
+  async findBySearch(term: string){
+    const customers = await this.customerRepository.find({
+      where: [
+        { fullname: Like(`%${term}%`), status: true }
+      ]
+    })
+    if(customers.length === 0){
+      throw new BadRequestException(`Customer: ${term} not found.`)
+    }
+
+    return customers
+    }
+
   async update(id: string, updateCustomerDto: UpdateCustomerDto) {
     const customer = await this.customerRepository.preload({ id, ...updateCustomerDto})
     await this.customerRepository.save(customer)
     return customer
   }
 
-  async remove(id: string) {
+
+  async purchaseIncrease(customer: Customer){
+   customer.purchases += 1
+   await this.customerRepository.save(customer)
+  }
+
+  async remove(id: string) {  
     const customer = await this.findOne(id)
-    await this.customerRepository.remove( customer )
+    await this.customerRepository.update(customer.id, { status: false})
     return{
+      status: 200,
       message: 'Customer deleted.',
-      customer
     }
   }
 }

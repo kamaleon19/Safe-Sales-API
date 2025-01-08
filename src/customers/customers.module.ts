@@ -13,6 +13,7 @@ import { CommonModule } from 'src/common/common.module';
     TypeOrmModule.forFeature([ Customer ]),
 
     CommonModule
-  ]
+  ],
+  exports: [ TypeOrmModule, CustomersService ]
 })
 export class CustomersModule {}

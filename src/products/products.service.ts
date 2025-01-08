@@ -1,14 +1,17 @@
 import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { validate as IsUUID } from "uuid";
 
+import { Product } from './entities/product.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 
-import { Product } from './entities/product.entity';
+import { SaleItemsDto } from 'src/sales/dto/sale-items.dto';
+
 
 
 @Injectable()
@@ -41,6 +44,7 @@ export class ProductsService {
     const products = await this.productRepository.find({
       take: limit,
       skip: offset,
+      where: { available: true }
     })
     return products
 
@@ -48,18 +52,12 @@ export class ProductsService {
 
   async findOne(term: string) {
     
-    let product : Product
+    let product : Product 
 
     if(IsUUID(term)){
-      product = await this.productRepository.findOneBy({ id: term })
+      product = await this.productRepository.findOneBy({ id: term, available: true})
     }else{
-
-      const queryBuilder = this.productRepository.createQueryBuilder('prod')
-      product = await queryBuilder
-        .where('UPPER(name) =:name',{
-          name: term.toUpperCase(),
-        })
-        .getOne()
+      product = await this.productRepository.findOne({ where : { name: term, available: true}})
     }
 
     if(!product){
@@ -76,12 +74,52 @@ export class ProductsService {
 
   }
 
+
   async remove(id: string) {
 
     const product = await this.findOne( id )
-    await this.productRepository.remove(product)
+    await this.productRepository.update(product.id, { available: false })
+    return {
+      status: 200,
+      message: 'Product deleted successfully'
+    }
     
   }
+
+
+  async findBySearch(term: string){
+    const products = await this.productRepository.find({
+      where: { name : Like(`%${term}%`), available: true}
+    })
+
+    if(products.length === 0){
+      throw new NotFoundException(`No products found with term: ${term}`)
+    }
+    return products
+    }
+
+
+
+  async updateStock(saleItemsDto: SaleItemsDto[]){
+    
+    for(const item of saleItemsDto){
+      const product = await this.productRepository.findOne({
+        where : { name : item.name}
+      })
+
+      if(!product){
+        throw new NotFoundException(`Product not found: ${item.name}`)
+      }
+      if(product.stock < item.quantity){
+        throw new BadRequestException(`Insufficient stock for product: ${product.name}`)
+      }
+
+      product.stock -= item.quantity
+      await this.productRepository.save(product)
+
+    }
+
+  } 
 
   private handleDbExceptions( error: any){
     if(error.code === '23505'){
