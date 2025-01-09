@@ -11,8 +11,10 @@ import { Product } from 'src/products/entities/product.entity';
 import { ProductsService } from 'src/products/products.service';
 
 import { CustomersService } from 'src/customers/customers.service';
+
 import { PaymentMethod } from './enums';
 import { DateFilterDto } from './dto/date-filter.dto';
+import { PaginationDto } from 'src/common/dtos/pagination.dto';
 
 @Injectable()
 export class SalesService {
@@ -74,8 +76,16 @@ export class SalesService {
     }
   }
 
-  async findAll() {
-    const sales = await this.saleRepository.find({
+  async findAll( paginationDto: PaginationDto) {
+    const { limit, page } = paginationDto;
+
+    const totalSales = await this.saleRepository.count();
+    const totalPages = Math.ceil(totalSales / limit);
+
+    const data = await this.saleRepository.find({
+
+      take: limit,
+      skip: (page - 1) * limit,
       relations: {
         products: false,
       },
@@ -83,7 +93,15 @@ export class SalesService {
         products: false,
       },
     });
-    return sales;
+    
+    return {
+      data,
+      meta: {
+        totalSales,
+        totalPages,
+        currentPage: page,
+      },
+    };
   }
 
   async findOne(id: string) {
@@ -101,7 +119,8 @@ export class SalesService {
     return sale;
   }
 
-  async findByPaymentMethod(term: PaymentMethod) {
+  async findByPaymentMethod(term: PaymentMethod ) {
+
     const sales = await this.saleRepository.find({
       where: { payment: term },
     });
@@ -109,10 +128,10 @@ export class SalesService {
       throw new NotFoundException(`No sales found with payment method: ${term}`);
     }
 
-    return sales;
+    return sales
   }
 
-  async findByDate(dateFilterDto: DateFilterDto) {
+  async findByDate(dateFilterDto: DateFilterDto ) {
     const { startDate, endDate } = dateFilterDto;
 
     const sales = await this.saleRepository.find({
@@ -129,7 +148,10 @@ export class SalesService {
     if(sales.length === 0){ 
       throw new NotFoundException(`No sales found between ${startDate} and ${endDate}`);
     }
-    return { sales, total };
+    return {
+      data: sales,
+      total
+    };
   }
 
   async update(id: string, updateSaleDto: UpdateSaleDto) {

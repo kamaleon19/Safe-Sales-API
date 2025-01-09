@@ -37,15 +37,25 @@ export class CustomersService {
 
   async findAll( paginationDto: PaginationDto) {
 
-      const { limit = 10, offset = 0} = paginationDto
+      const { limit, page } = paginationDto
 
+      const totalCustomers = await this.customerRepository.count({ where : { status: true }})  
+      const totalPages = Math.ceil(totalCustomers / limit)
+        
       const customers = await this.customerRepository.find({
         take: limit,
-        skip: offset,
-        where: { status: true}  
+        skip: (page - 1) * limit,
+        where: { status: true }
       })
       
-      return customers
+      return {
+        data: customers,
+        meta: {
+          totalCustomers,
+          totalPages,
+          currentPage: page
+        }
+      }
   }
 
   async findOne(term: string) {

@@ -5,12 +5,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { ProductsModule } from './products/products.module';
 import { CustomersModule } from './customers/customers.module';
-
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { SuppliersModule } from './suppliers/suppliers.module';
 import { ExpensesModule } from './expenses/expenses.module';
 import { SalesModule } from './sales/sales.module';
+
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 @Module({
   imports: [

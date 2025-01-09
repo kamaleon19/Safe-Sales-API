@@ -32,15 +32,25 @@ export class SuppliersService {
   }
 
   async findAll(paginationDto: PaginationDto) {
-    const { limit = 10, offset = 0 } = paginationDto;
+    const { limit, page } = paginationDto;
 
-    const products = await this.supplierRepository.find({
+    const totalSuppliers = await this.supplierRepository.count({ where: { status: true } });
+    const totalPages = Math.ceil(totalSuppliers / limit);
+
+    const suppliers = await this.supplierRepository.find({
       take: limit,
-      skip: offset,
+      skip: (page - 1) * limit,
       where: { status: true },
     });
 
-    return products;
+    return {
+      data: suppliers,
+      meta: {
+        totalSuppliers,
+        totalPages,
+        currentPage: page,
+      },
+    };
   }
 
   async findOne(term: string) {

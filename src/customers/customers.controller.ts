@@ -1,7 +1,9 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+
 import { CustomersService } from './customers.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
+
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 
 @Controller('customers')

@@ -1,6 +1,7 @@
 import { BeforeUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { CustomerFrequency } from '../enum/customer-frequency.enum';
+
 import { Sale } from 'src/sales/entities/sale.entity';
+import { CustomerFrequency } from '../enum/customer-frequency.enum';
 
 @Entity()
 export class Customer {

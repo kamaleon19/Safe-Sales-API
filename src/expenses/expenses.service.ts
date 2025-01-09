@@ -4,9 +4,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import {validate as IsUUID} from 'uuid'
 
+import { Expense } from './entities/expense.entity';
 import { CreateExpenseDto } from './dto/create-expense.dto';
 import { UpdateExpenseDto } from './dto/update-expense.dto';
-import { Expense } from './entities/expense.entity';
+
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 
 
@@ -37,12 +38,15 @@ export class ExpensesService {
 
   async findAll( paginationDto: PaginationDto ) { 
 
-    const { limit = 10, offset = 0} = paginationDto
+    const { limit, page } = paginationDto
 
-    const expenses = await this.expenseRepository.find({
-      take: limit,
-      skip: offset
-    })
+   const totalExpenses = await this.expenseRepository.count()
+   const totalPages = Math.ceil(totalExpenses / limit)
+
+   const expenses = await this.expenseRepository.find({
+    take : limit,
+    skip : (page - 1) * limit,
+   })
 
     expenses.map( expense => {
       if(expense.status !== 'PAGADO'){
@@ -50,7 +54,14 @@ export class ExpensesService {
       }
     })
 
-    return expenses
+    return {
+      data: expenses,
+      meta: {
+        totalExpenses,
+        totalPages,
+        currentPage: page
+      } 
+    }
   }
 
   async findOne(term: string) { 

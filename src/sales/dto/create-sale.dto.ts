@@ -1,7 +1,8 @@
 import { ArrayMinSize, IsArray, IsEnum, IsOptional, IsString, MinLength, ValidateNested } from "class-validator"
-import { PaymentMethod, PaymentMethodList, PaymentStatusList, PaymentStaus } from "../enums"
-import { SaleItemsDto } from "./sale-items.dto"
 import { Type } from "class-transformer"
+
+import { SaleItemsDto } from "./sale-items.dto"
+import { PaymentMethod, PaymentMethodList, PaymentStatusList, PaymentStaus } from "../enums"
 
 
 export class CreateSaleDto {

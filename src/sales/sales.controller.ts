@@ -1,9 +1,13 @@
 import { Controller, Get, Post, Body, Patch, Param, ParseUUIDPipe, Query } from '@nestjs/common';
+
 import { SalesService } from './sales.service';
+
 import { CreateSaleDto } from './dto/create-sale.dto';
 import { UpdateSaleDto } from './dto/update-sale.dto';
-import { PaymentMethod } from './enums';
 import { DateFilterDto } from './dto/date-filter.dto';
+
+import { PaymentMethod } from './enums';
+import { PaginationDto } from 'src/common/dtos/pagination.dto';
 
 @Controller('sales')
 export class SalesController {
@@ -15,17 +19,17 @@ export class SalesController {
   }
 
   @Get()
-  findAll() {
-    return this.salesService.findAll();
+  findAll(@Query() paginationDto: PaginationDto) {
+    return this.salesService.findAll(paginationDto);
   }
 
   @Get('payment')
-  findByPaymentMethod(@Query('term') term: PaymentMethod){
+  findByPaymentMethod(@Query() term: PaymentMethod) {
     return this.salesService.findByPaymentMethod(term)
   }
 
   @Get('sales-by-date')
-  findByDate(@Query() dateFilterDto: DateFilterDto){
+  findByDate(@Query() dateFilterDto: DateFilterDto) {
     return this.salesService.findByDate(dateFilterDto);
   }
   

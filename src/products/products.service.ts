@@ -39,14 +39,25 @@ export class ProductsService {
 
   async findAll( paginationDto: PaginationDto ) {
 
-    const { limit = 10, offset = 0} = paginationDto
+    const { limit , page } = paginationDto
+
+    const totalProducts = await this.productRepository.count({ where : { available: true }})
+    const totalPages = Math.ceil( totalProducts / limit)
 
     const products = await this.productRepository.find({
       take: limit,
-      skip: offset,
+      skip: (page - 1) * limit,
       where: { available: true }
     })
-    return products
+
+    return {
+      data: products,
+      meta: {
+        totalProducts,
+        totalPages,
+        currentPage: page
+      }
+    }
 
   }
 

@@ -1,8 +1,9 @@
 import { BeforeInsert, BeforeUpdate, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm"
 
 import { Customer } from "src/customers/entities/customer.entity"
-import { PaymentStaus, PaymentMethod } from "../enums"
 import { Product } from "src/products/entities/product.entity"
+
+import { PaymentStaus, PaymentMethod } from "../enums"
 
 @Entity()
 export class Sale {

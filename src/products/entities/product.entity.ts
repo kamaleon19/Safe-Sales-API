@@ -1,5 +1,5 @@
-import { Sale } from "src/sales/entities/sale.entity"
 import { BeforeUpdate, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
+import { Sale } from "src/sales/entities/sale.entity"
 
 @Entity()
 export class Product {
@@ -47,7 +47,7 @@ export class Product {
 
     @Column({
         type: 'date',
-        nullable: false
+        nullable: true
     })
     updatedAt: Date
 
