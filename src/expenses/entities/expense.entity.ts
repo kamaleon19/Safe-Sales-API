@@ -43,7 +43,12 @@ export class Expense {
     type: 'date',
     nullable: true,
   })
+<<<<<<< HEAD
   paidAt?: Date;
+=======
+  paidAt?: string;
+  
+>>>>>>> expenses
 
 
   @BeforeInsert()
