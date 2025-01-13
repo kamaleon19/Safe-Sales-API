@@ -1,4 +1,4 @@
-import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { Repository } from 'typeorm';
@@ -34,6 +34,8 @@ export class ExpensesService {
       throw new Error(error)
     }
   }
+
+  // TO DO: Implementar filtro por fechas.
 
   async findAll( paginationDto: PaginationDto ) { 
 
@@ -78,15 +80,6 @@ export class ExpensesService {
     await this.expenseRepository.save(expense)
     return expense
 
-  }
-
-  async remove(id: string) {
-    const expense = await this.findOne(id)
-    await this.expenseRepository.remove(expense)
-    return {
-      status: HttpStatus.OK,
-      message: `Expense deleted.`
-    }
   }
 
 }

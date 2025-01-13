@@ -37,6 +37,7 @@ export class Expense {
     nullable: true,
   })
   paidAt?: string;
+  
 
 
   @BeforeInsert()
