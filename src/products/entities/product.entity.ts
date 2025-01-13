@@ -15,13 +15,13 @@ export class Product {
     name: string
 
     @Column({
-        type: 'float',
+        type: 'numeric',
         nullable: false
     })
     price: number
 
     @Column({
-        type: 'int'
+        type: 'numeric',
     })
     stock: number
 

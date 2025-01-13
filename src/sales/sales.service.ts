@@ -36,6 +36,8 @@ export class SalesService {
       const customer = await this.customerService.findOne(
         createSaleDto.customer,
       );
+
+      // Busqueda de productos y confirmacion de existencia.
       const productsName = createSaleDto.items.map((item) => item.name);
       const products = await this.productRepository.find({
         where: { name: In(productsName) },
@@ -48,12 +50,10 @@ export class SalesService {
       // Operaciones correspondientes para el header de la venta.
       const totalAmount = createSaleDto.items.reduce((acc, item) => {
         const product = products.find((product) => product.name === item.name);
-        return acc + product.price * item.quantity;
+        const quantity = item.quantity;
+        return acc + product.price * quantity
       }, 0);
-
-      const totalItems = createSaleDto.items.reduce((acc, item) => {
-        return acc + item.quantity;
-      }, 0);
+      const totalItems = products.length
 
       // Crear Venta
 

@@ -12,13 +12,13 @@ export class Sale {
     id: string
 
     @Column({
-        type: 'int',
+        type: 'numeric',
         nullable: false
     })
     totalAmount: number
 
     @Column({
-        type: 'int',
+        type: 'numeric',
         nullable: false
     })
     totalItems: number
