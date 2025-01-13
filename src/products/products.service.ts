@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { Like, Repository } from 'typeorm';
@@ -11,6 +11,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 
 import { SaleItemsDto } from 'src/sales/dto/sale-items.dto';
+import { CommonService } from 'src/common/common.service';
 
 
 
@@ -21,7 +22,9 @@ export class ProductsService {
 
   constructor(
     @InjectRepository( Product )
-    private readonly productRepository: Repository<Product>
+    private readonly productRepository: Repository<Product>,
+
+    private readonly commonService: CommonService
   ){}
 
   async create(createProductDto: CreateProductDto) {
@@ -33,7 +36,7 @@ export class ProductsService {
       return product
 
     } catch (error) {
-      this.handleDbExceptions(error)
+      this.commonService.handleDBExceptions(error)
     }
   }
 
@@ -131,12 +134,4 @@ export class ProductsService {
     }
 
   } 
-
-  private handleDbExceptions( error: any){
-    if(error.code === '23505'){
-      throw new BadRequestException(error.detail)
-    }
-    this.logger.error(error)
-    throw new InternalServerErrorException('Algo salio mal.')
-  }
 }
