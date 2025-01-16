@@ -22,52 +22,25 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+## Levantar API en DEV
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+1. Clonar el repositorio 
+```
+https://github.com/kamaleon19/Safe-Sales-API.git
+```
+2. Instalar dependencias
+```
+npm install
+```
+3. Clonar el archivo ``.env.template``, rellenar las variables de entorno y renombrarlo ``.env``
 
-## Installation
-
-```bash
-$ npm install
+4. Levantar DB
+```
+docker-compose up -d
+```
+5. Levantar API
+```
+npm run start:dev
 ```
 
-## Running the app
 
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-```
-
-## Test
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
