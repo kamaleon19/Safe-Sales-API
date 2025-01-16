@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { Like, Repository } from 'typeorm';
@@ -68,7 +68,7 @@ export class CustomersService {
          customer = await this.customerRepository.findOne({ where : { fullname: term, status: true}}) 
       }
       if(!customer){
-        throw new BadRequestException(`Customer: ${term} not found.`)
+        throw new NotFoundException(`Customer: ${term} not found.`)
       }
       return customer
   }
@@ -81,7 +81,7 @@ export class CustomersService {
       ]
     })
     if(customers.length === 0){
-      throw new BadRequestException(`Customer: ${term} not found.`)
+      throw new NotFoundException(`Customer: ${term} not found.`)
     }
 
     return customers

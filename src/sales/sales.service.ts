@@ -141,9 +141,8 @@ export class SalesService {
     });
     
     const total = sales.reduce((acc, sale) => {
-      return acc + sale.totalAmount;
+      return acc + parseFloat(sale.totalAmount as unknown as string);
     }, 0);
-    
     
     if(sales.length === 0){ 
       throw new NotFoundException(`No sales found between ${startDate} and ${endDate}`);

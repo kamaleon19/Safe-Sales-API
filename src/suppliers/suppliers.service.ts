@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { Repository } from 'typeorm';
@@ -64,7 +64,7 @@ export class SuppliersService {
 
 
     if (!supplier) {
-      throw new BadRequestException(`Supplier: ${term} not found.`);
+      throw new NotFoundException(`Supplier: ${term} not found.`);
     }
     return supplier;
   }

@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { Repository } from 'typeorm';
@@ -76,7 +76,7 @@ export class ExpensesService {
       expense = await this.expenseRepository.findOneBy({ name: term })
     }
     if(!expense){
-      throw new BadRequestException(`Expense: ${term} not found.`)
+      throw new NotFoundException(`Expense: ${term} not found.`)
     }
 
     if(expense.status !== 'PAGADO'){
