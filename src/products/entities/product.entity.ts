@@ -53,19 +53,16 @@ export class Product {
 
 
     @ApiProperty({
-        example: ['Arcor', 'Terrabusi'],
-        description: 'Proveedores del Producto',
-        type: 'array',
-        items: {
-            type: 'string'
-        },
-        required: true
+        example: 'Arcor',
+        description: 'Proveedor del Producto',
+        required: true,
+        type: String
     })
     @Column({
         type: 'text',
-        array: true
+        nullable: false
     })
-    supplier: string[]
+    supplier: string
 
 
     @ApiProperty({

@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsArray,
   IsNumber,
   IsOptional,
   IsPositive,
@@ -50,10 +49,9 @@ export class CreateProductDto {
     type : Array,
     required: true,
   })
-  @IsString({ each: true })
-  @IsArray()
+  @IsString()
   @IsOptional()
-  supplier: string[];
+  supplier: string;
 
 
   @ApiProperty({
