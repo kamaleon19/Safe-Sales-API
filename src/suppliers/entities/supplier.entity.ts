@@ -95,6 +95,12 @@ export class Supplier {
   })
   updateAt: Date;
 
+  @Column({
+    type: 'text',
+    default: 'prueba'
+  })
+  prueba: string
+
 
   @BeforeUpdate()
   updateTimestamp() {
