@@ -28,6 +28,7 @@ import { AppService } from './app.service';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       entities: [__dirname + '/**/*.entity.{js,ts}'],
+      migrations: [__dirname + '/migrations/**/*.{js,ts}'],
     }),
 
 
