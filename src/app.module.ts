@@ -15,9 +15,7 @@ import { AppService } from './app.service';
 @Module({
   imports: [
 
-    ConfigModule.forRoot({ 
-      envFilePath: `.env.${process.env.NODE_ENV}`
-    }),
+    ConfigModule.forRoot(),
 
 
     TypeOrmModule.forRoot({
@@ -27,8 +25,8 @@ import { AppService } from './app.service';
       database: process.env.DB_NAME,
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
-      entities: [__dirname + '/**/*.entity.{js,ts}'],
-      migrations: [__dirname + '/migrations/**/*.{js,ts}'],
+      autoLoadEntities: true,
+      synchronize: true
     }),
 
 

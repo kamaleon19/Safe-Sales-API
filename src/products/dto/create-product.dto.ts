@@ -44,9 +44,9 @@ export class CreateProductDto {
 
 
   @ApiProperty({
-    example: ['Arcor', 'Terrabusi'],
+    example: 'Arcor',
     description: 'Proveedor del Producto',
-    type : Array,
+    type : String,
     required: true,
   })
   @IsString()
