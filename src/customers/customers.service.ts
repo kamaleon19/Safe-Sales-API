@@ -75,6 +75,7 @@ export class CustomersService {
 
 
   async findBySearch(term: string){
+    
     const customers = await this.customerRepository.find({
       where: [
         { fullname: Like(`%${term}%`), status: true }

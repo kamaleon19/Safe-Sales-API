@@ -9,6 +9,7 @@ async function bootstrap() {
     cors: {
       origin: [
         'http://localhost:5173',
+        'http://localhost:3000',
         'https://ignaciomontaldi.github.io/front-safe-sales/'
       ], 
       methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
