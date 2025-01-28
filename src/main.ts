@@ -5,7 +5,17 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    cors: {
+      origin: [
+        'http://localhost:3000',
+        'https://ignaciomontaldi.github.io/front-safe-sales/'
+      ], 
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+      preflightContinue: false,
+      optionsSuccessStatus: 204,
+    },
+  });
 
   app.setGlobalPrefix('api');
   const config = new DocumentBuilder()
