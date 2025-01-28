@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { Like, Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { validate as IsUUID } from "uuid";
 
 import { Product } from './entities/product.entity';
@@ -103,7 +103,7 @@ export class ProductsService {
 
   async findBySearch(term: string){
     const products = await this.productRepository.find({
-      where: { name : Like(`%${term}%`), available: true}
+      where: { name : ILike(`%${term}%`), available: true}
     })
 
     if(products.length === 0){

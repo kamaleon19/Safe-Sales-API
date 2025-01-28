@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { Like, Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { validate as IsUUID } from 'uuid'
 
 import { Customer } from './entities/customer.entity';
@@ -78,7 +78,7 @@ export class CustomersService {
     
     const customers = await this.customerRepository.find({
       where: [
-        { fullname: Like(`%${term}%`), status: true }
+        { fullname: ILike(`%${term}%`), status: true }
       ]
     })
     if(customers.length === 0){
